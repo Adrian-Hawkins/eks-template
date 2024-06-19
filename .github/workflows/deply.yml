@@ -10,6 +10,7 @@ jobs:
         steps:
             - name: Checkout
               uses: actions/checkout@v4
+
             - name: Install kubectl
               uses: azure/setup-kubectl@v2.0
               id: install
@@ -20,9 +21,11 @@ jobs:
                 aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
                 aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
                 aws-region: eu-west-1
+
             - name: Login to Amazon ECR
               id: login-ecr
               uses: aws-actions/amazon-ecr-login@v1
+
             - name: Build, tag, and push image to Amazon ECR
               id: build-image
               env:
@@ -32,3 +35,12 @@ jobs:
               run: |
                 docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG ./example.services.user
                 docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+            
+                # IDK about this??
+            - name: Update k8s deployment
+              run: aws eks update-kubeconfig --name eks-cluster --region eu-west-1
+
+            - name: Deploy to EKS
+              run: |
+                kubectl apply -f ./example.services.user/k8s/deployment.yaml
+                kubectl apply -f ./example.services.user/k8s/service.yaml
