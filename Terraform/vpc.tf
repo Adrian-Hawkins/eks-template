@@ -1,10 +1,3 @@
-# resource "aws_default_vpc" "default_vpc" {
-#   tags = {
-#     Name = "default_vpc"
-#   }
-# }
-
-
 resource "aws_vpc" "main" {
   cidr_block                       = "192.168.0.0/16"
   instance_tenancy                 = "default"
