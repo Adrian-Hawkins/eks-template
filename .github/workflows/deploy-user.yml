@@ -35,12 +35,13 @@ jobs:
               run: |
                 docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG ./example.services.user
                 docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-            
-                # IDK about this??
+
             - name: Update k8s deployment
               run: aws eks update-kubeconfig --name eks --region eu-west-1
 
+# Each individual service will have its own deployment and service file
+# This is an example of how to deploy a service to EKS
             - name: Deploy to EKS
               run: |
-                kubectl apply -f ./example.services.user/k8s/deployment.yaml
-                kubectl apply -f ./example.services.user/k8s/service.yaml
+                kubectl apply -f ./example.services.user/k8s/user-deployment.yaml
+                kubectl apply -f ./example.services.user/k8s/user-service.yaml
