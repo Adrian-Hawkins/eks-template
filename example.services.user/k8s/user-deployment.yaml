@@ -21,12 +21,6 @@ spec:
           imagePullPolicy: Always
           ports:
             - containerPort: 3000
-          env:
-            - name: DB_CONNECTION
-              valueFrom:
-                secretKeyRef:
-                  name: user-secrets
-                  key: db-connection
           resources:
             limits:
               cpu: "1"
